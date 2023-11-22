@@ -18,7 +18,7 @@ def check_password(username, password) -> str | None:
 
     This function is purposely vulnerable to SQL injection.
     """
-    conn = sqlite3.connect(f"{DB_FILE}?mode=ro") # open the database in read-only mode
+    conn = sqlite3.connect(f"file:{DB_FILE}?mode=ro", uri=True) # open the database in read-only mode
     c = conn.cursor()
     c.execute(f"SELECT * FROM users WHERE username='{username}' AND password='{password}'")
     result = c.fetchone()

@@ -7,10 +7,13 @@
     </head>
     <body>
         <p>flag{22b977eafff25048f348c74d54299aed}</p>
+        <p>UNAUTHORIZED ACCESS TO THIS SYSTEM IS PROHIBITED</p>
+        <p>You must have explicit, authorized permission to access or configure this device. Unauthorized attempts and actions to access or use this system may result in civil and/or criminal penalties. All activities performed on this device are logged and monitored. </p>
         <h1>Login</h1>
             <form method="post">
-                Username: <input type="text" name="username" required pattern="[A-Za-z0-9]*"><br>
-                Password: <input type="password" name="password" required><br>
+                Username: <input type="text" name="username" pattern="[A-Za-z0-9]*"><br>
+                Password: <input type="password" name="password" pattern="[A-Za-z0-9!@#$%^&*()-_=+]*"><br>
+                NOTE: to prevent SQL injection, usernames must be alphanumeric and passwords may only contain alphanumeric characters and the following special characters !@#$%^&*()-_+=<br>
                 <input type="submit" value="Login">
             </form>
             <p>{{ msg }}</p>
