@@ -1,0 +1,99 @@
+# dec/06/2023 23:25:00 by RouterOS 6.41.4
+# software id = YL4G-7B8Q
+#
+# model = RouterBOARD 3011UiAS
+# serial number = 8EEE0971D937
+/interface bridge
+add admin-mac=B8:69:F4:BB:F5:9D auto-mac=no comment=defconf name=bridge
+/interface ethernet
+set [ find default-name=ether1 ] speed=1Gbps
+set [ find default-name=ether2 ] speed=1Gbps
+set [ find default-name=ether3 ] speed=1Gbps
+set [ find default-name=ether4 ] speed=1Gbps
+set [ find default-name=ether5 ] speed=1Gbps
+set [ find default-name=ether6 ] speed=1Gbps
+set [ find default-name=ether7 ] speed=1Gbps
+set [ find default-name=ether8 ] speed=1Gbps
+set [ find default-name=ether9 ] speed=1Gbps
+set [ find default-name=ether10 ] speed=1Gbps
+set [ find default-name=sfp1 ] advertise=""
+/interface list
+add comment=defconf name=WAN
+add comment=defconf name=LAN
+/interface wireless security-profiles
+set [ find default=yes ] supplicant-identity=MikroTik
+/ip pool
+add name=dhcp ranges=192.168.88.10-192.168.88.254
+/ip dhcp-server
+add address-pool=dhcp disabled=no interface=bridge name=defconf
+/user group
+set read policy=local,telnet,ssh,read,winbox,web,!ftp,!reboot,!write,!policy,!test,!password,!sniff,!sensitive,!api,!romon,!dude,!tikapp
+set full policy=local,telnet,ssh,ftp,reboot,read,write,policy,test,winbox,password,web,sniff,sensitive,api,romon,tikapp,!dude
+add name=full-limited-location policy=local,ftp,reboot,read,write,policy,test,password,sniff,sensitive,romon,dude,!telnet,!ssh,!winbox,!web,!api,!tikapp
+/interface bridge port
+add bridge=bridge comment=defconf interface=ether2
+add bridge=bridge comment=defconf interface=ether3
+add bridge=bridge comment=defconf interface=ether4
+add bridge=bridge comment=defconf interface=ether5
+add bridge=bridge comment=defconf interface=ether6
+add bridge=bridge comment=defconf interface=ether7
+add bridge=bridge comment=defconf interface=ether8
+add bridge=bridge comment=defconf interface=ether9
+add bridge=bridge comment=defconf interface=ether10
+add bridge=bridge comment=defconf interface=sfp1
+/ip neighbor discovery-settings
+set discover-interface-list=LAN
+/interface list member
+add comment=defconf interface=bridge list=LAN
+add comment=defconf interface=ether1 list=WAN
+/ip address
+add address=192.168.88.1/24 comment=defconf interface=ether2 network=192.168.88.0
+add address=192.168.42.10/24 interface=ether1 network=192.168.42.0
+/ip dhcp-server lease
+add address=192.168.88.10 client-id=1:bc:24:11:f5:a9:58 mac-address=BC:24:11:F5:A9:58 server=defconf
+/ip dhcp-server network
+add address=192.168.88.0/24 comment=defconf gateway=192.168.88.1
+/ip dns
+set allow-remote-requests=yes
+/ip dns static
+add address=192.168.88.1 comment=defconf name=router.lan
+/ip firewall filter
+add action=accept chain=input comment="defconf: accept established,related,untracked" connection-state=established,related,untracked
+add action=drop chain=input comment="defconf: drop invalid" connection-state=invalid
+add action=accept chain=input comment="defconf: accept ICMP" protocol=icmp
+add action=accept chain=input comment="defconf: accept to local loopback (for CAPsMAN)" dst-address=127.0.0.1
+add action=drop chain=input comment="defconf: drop all not coming from LAN" disabled=yes in-interface-list=!LAN
+add action=accept chain=forward comment="defconf: accept in ipsec policy" disabled=yes ipsec-policy=in,ipsec
+add action=accept chain=forward comment="defconf: accept out ipsec policy" disabled=yes ipsec-policy=out,ipsec
+add action=fasttrack-connection chain=forward comment="defconf: fasttrack" connection-state=established,related
+add action=accept chain=forward comment="defconf: accept established,related, untracked" connection-state=established,related,untracked
+add action=drop chain=forward comment="defconf: drop invalid" connection-state=invalid
+add action=add-src-to-address-list address-list=1969 address-list-timeout=10s chain=input dst-port=1969 protocol=tcp
+add action=add-src-to-address-list address-list=port:1815 address-list-timeout=10s chain=input dst-port=1815 protocol=tcp
+add action=add-src-to-address-list address-list=secure address-list-timeout=1h chain=input dst-port=1996 log=yes protocol=tcp src-address-list=port:1815
+add action=add-src-to-address-list address-list=port:9000 address-list-timeout=1m chain=input disabled=yes dst-port=9000 protocol=tcp
+add action=add-src-to-address-list address-list=secure address-list-timeout=1h chain=input disabled=yes dst-port=6000 protocol=tcp src-address-list=port:9000
+add action=accept chain=input src-address-list=secure
+add action=drop chain=forward comment="defconf: drop all from WAN not DSTNATed" connection-nat-state=!dstnat connection-state=new in-interface-list=WAN
+add action=drop chain=input
+/ip firewall nat
+add action=masquerade chain=srcnat comment="defconf: masquerade" ipsec-policy=out,none out-interface-list=WAN
+/ip route
+add distance=1 gateway=192.168.42.1
+/ip service
+set www address=0.0.0.0/0
+set winbox address=0.0.0.0/0
+/ip ssh
+set forwarding-enabled=yes
+/lcd
+set default-screen=stat-slideshow read-only-mode=yes touch-screen=disabled
+/system clock
+set time-zone-name=America/Denver
+/system identity
+set name=holidayhacks-rtr
+/system routerboard settings
+set enter-setup-on=delete-key
+/tool mac-server
+set allowed-interface-list=LAN
+/tool mac-server mac-winbox
+set allowed-interface-list=LAN

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <h1>IT Dashboard</h1>
+        {% if result is undefined %}
+            <p>Welcome back, {{ username }}!</p>
+            <p>flag{c1a36812513f6d080dc6947a9d3a2593}</p>
+        {% else %}
+            <pre class="code">{{ result }}</pre>
+        {% endif %}
+        <h2>Health Checks</h2>
+        <h3>Ping</h3>
+        <form id="ping" action="/ping" method="post">
+            <input type="text" name="host" pattern="[A-Za-z0-9.:]*">
+            <input type="submit" value="Ping">
+        </form> 
+        <h3>Traceroute</h3>
+        <form id="traceroute" action="/traceroute" method="post">
+            <input type="text" name="host" pattern="[A-Za-z0-9.:]*">
+            <input type="submit" value="Traceroute">
+        </form> 
+        <h3>Curl</h3>
+        <form id="curl" action="/curl" method="post">
+            <input type="text" name="host" pattern="[A-Za-z0-9.:]*">
+            <input type="submit" value="Curl">
+        </form> 
+    </body>
+</html>
