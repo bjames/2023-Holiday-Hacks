@@ -19,7 +19,7 @@ for i in {1..333}; do
     FILE_NAME=$(shuf -n 1 "$WORD_LIST")
 
     # Create a file with an empty image
-    cp ~/Documents/not_secret.png "$FILE_NAME"
+    cp ./not_secret.png "$FILE_NAME"
     # pad with some random bytes to change the size
     head -c $((RANDOM)) /dev/random >> "$FILE_NAME"
 
